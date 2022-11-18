@@ -1,0 +1,109 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fiche form</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+    <SCRIPT LANGUAGE='Javascript'>
+      function bienvenue() {
+        elem = document.getElementById('typeDemande')
+        elemAcces = document.getElementById('refAcces')
+        elemOrdi = document.getElementById('refOrdi')
+        elemPhone = document.getElementById('refPhone')
+        if (elem.value==1){
+          elemAcces.disabled=true;
+          elemOrdi.disabled=false;
+          elemPhone.disabled=true;
+        }
+        if (elem.value==2){
+          elemAcces.disabled=false;
+          elemOrdi.disabled=true;
+          elemPhone.disabled=true;
+        }
+        if (elem.value==3){
+          elemAcces.disabled=true;
+          elemOrdi.disabled=true;
+          elemPhone.disabled=false;
+        }
+      }
+      </SCRIPT>
+</head>
+<body>
+    <div class="main-block">
+      <div class="left-part">
+        <i class="fas fa-envelope"></i>
+        <i class="fas fa-at"></i>
+        <i class="fas fa-mail-bulk"></i>
+      </div>
+      <form action="{% url 'saveRequest' %}" method="POST">
+        {% csrf_token %}
+        <h1>Fiche de demande</h1>
+
+        <label for="sendBy"><b>Envoyer par</b></label>
+          <input type="text" placeholder="Envoyer par" name="sendBy" id="sendBy" value="{{ sendBy }} " disabled="disabled">
+
+        <div class="container">
+          <div>
+            <label for="typeDemande"><b>Type de demande</b></label>
+            <select name="typeDemande" id="typeDemande" onchange="bienvenue()">
+              <option value="">Selection</option>
+              {% for Type in typeDemandes %}
+                <option value="{{Type.id}}">{{Type.type}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="employee"><b>Employé</b></label>
+            <select name="employee" id="employee">
+              <option value="">Selection</option>
+              {% for employee in employees %}
+                <option value="{{employee.id}}">{{employee.name}} {{employee.firstName}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="receiver"><b>Destinataire</b></label>
+            <INPUT type= "radio" name="receiver" value="1"> RH
+            <INPUT type= "radio" name="receiver" value="2"> MP
+            <INPUT type= "radio" name="receiver" value="3"> AS
+            <INPUT type= "radio" name="receiver" value="4"> RT
+          </div>
+
+        <div class="flex">
+          <label for="sendBy"><b>Matériel</b></label>
+          <select name="refOrdi" id="refOrdi" disabled>
+            <option value="">Selection</option>
+            {% for ordinateur in ordinateurs %}
+              <option value="{{ordinateur.id}}">{{ordinateur.reference}}</option>
+            {% endfor %}
+          </select>
+
+          <label for="sendBy"><b>Droit d'accès</b></label>
+          <select name="refAcces" id="refAcces" disabled>
+            <option value="">Selection</option>
+            {% for acce in acces %}
+              <option value="{{acce.id}}">{{acce.reference}}</option>
+            {% endfor %}
+          </select>
+          
+          <label for="sendBy"><b>Téléphonie</b></label>
+          <select name="refPhone" id="refPhone" disabled>
+            <option value="">Selection</option>
+            {% for telephone in telephones %}
+              <option value="{{telephone.id}}">{{telephone.reference}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <p>Commentaire</p>
+        <div>
+          <textarea rows="4" cols="80%" name="description"></textarea>
+        </div>
+        <button type="submit">envoyer</button>
+
+      </form>
+    </div>
+  </body>
+</html>
+
